@@ -2,15 +2,12 @@ package forms;
 
 import models.EntriesTableModel;
 import models.Parameters;
-import processors.FileProcessing;
 
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class MainForm extends JFrame {
 
@@ -61,7 +58,6 @@ public class MainForm extends JFrame {
             public void menuSelected(MenuEvent e) {
                 AboutAuthorForm form = new AboutAuthorForm();
                 form.setVisible(true);
-                dispose();
             }
 
             @Override
@@ -80,7 +76,6 @@ public class MainForm extends JFrame {
             public void menuSelected(MenuEvent e) {
                 HelpForm form = new HelpForm();
                 form.setVisible(true);
-                dispose();
             }
 
             @Override

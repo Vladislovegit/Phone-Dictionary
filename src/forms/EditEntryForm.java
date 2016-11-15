@@ -8,7 +8,6 @@ import processors.FileProcessing;
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -21,8 +20,7 @@ public class EditEntryForm extends JFrame {
     private static EntriesTableModel entriesTable;
     private JTable entries;
     private JComboBox comboBox;
-    private JTextField fullNameTextField, addressTextField, phoneNumberTextField;
-    private boolean isDataChanges = false;
+    private JTextField firstNameTextField, lastNameTextField, patronymicTextField, addressTextField, phoneNumberTextField;
     private int index;
 
     public EditEntryForm() {
@@ -36,7 +34,7 @@ public class EditEntryForm extends JFrame {
     private void buildGUI() {
         setTitle("Редактирование");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(Parameters.WIDTH, Parameters.HEIGHT + 110);
+        setSize(Parameters.WIDTH + 400, Parameters.HEIGHT);
         setResizable(false);
         setLocationRelativeTo(null);
 
@@ -72,8 +70,6 @@ public class EditEntryForm extends JFrame {
             public void menuSelected(MenuEvent e) {
                 AboutAuthorForm form = new AboutAuthorForm();
                 form.setVisible(true);
-                saveData();
-                dispose();
             }
 
             @Override
@@ -92,8 +88,6 @@ public class EditEntryForm extends JFrame {
             public void menuSelected(MenuEvent e) {
                 HelpForm form = new HelpForm();
                 form.setVisible(true);
-                saveData();
-                dispose();
             }
 
             @Override
@@ -112,51 +106,67 @@ public class EditEntryForm extends JFrame {
         menuBar.add(author);
         menuBar.add(help);
 
-        JLabel fullName = new JLabel("Полное имя: ");
-        fullName.setBounds(5, 365, 450, 20);
-        fullName.setFont(Parameters.LABELS_FONT);
-        fullNameTextField = new JTextField();
-        fullNameTextField.setBounds(130, 365, 260, 25);
-        fullNameTextField.setFont(Parameters.LABELS_FONT);
+        JLabel firstName = new JLabel("Имя: ");
+        firstName.setBounds(390, 60, 375, 20);
+        firstName.setFont(Parameters.LABELS_FONT);
+        firstNameTextField = new JTextField();
+        firstNameTextField.setBounds(520, 60, 250, 25);
+        firstNameTextField.setFont(Parameters.LABELS_FONT);
+
+        JLabel lastName = new JLabel("Фамилия: ");
+        lastName.setBounds(390, 35, 375, 20);
+        lastName.setFont(Parameters.LABELS_FONT);
+        lastNameTextField = new JTextField();
+        lastNameTextField.setBounds(520, 35, 250, 25);
+        lastNameTextField.setFont(Parameters.LABELS_FONT);
+
+        JLabel patronymic = new JLabel("Отчество: ");
+        patronymic.setBounds(390, 85, 375, 20);
+        patronymic.setFont(Parameters.LABELS_FONT);
+        patronymicTextField = new JTextField();
+        patronymicTextField.setBounds(520, 85, 250, 25);
+        patronymicTextField.setFont(Parameters.LABELS_FONT);
 
         JLabel address = new JLabel("Адрес: ");
-        address.setBounds(5, 390, 450, 20);
+        address.setBounds(390, 110, 375, 20);
         address.setFont(Parameters.LABELS_FONT);
         addressTextField = new JTextField();
-        addressTextField.setBounds(130, 390, 260, 25);
+        addressTextField.setBounds(520, 110, 250, 25);
         addressTextField.setFont(Parameters.LABELS_FONT);
 
-        final JLabel phoneNumber = new JLabel("Номер телефона: ");
-        phoneNumber.setBounds(5, 415, 450, 20);
+        JLabel phoneNumber = new JLabel("Номер телефона: ");
+        phoneNumber.setBounds(390, 135, 375, 20);
         phoneNumber.setFont(Parameters.LABELS_FONT);
         phoneNumberTextField = new JTextField();
-        phoneNumberTextField.setBounds(130, 415, 260, 25);
+        phoneNumberTextField.setBounds(520, 135, 250, 25);
         phoneNumberTextField.setFont(Parameters.LABELS_FONT);
 
         delete = new JButton("Удалить");
-        delete.setBounds(130, 335, 100, 25);
+        delete.setBounds(5, 335, 150, 25);
         delete.setFont(Parameters.BUTTONS_FONT);
         delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 entriesTable.remove(entries.getSelectedRow());
-                isDataChanges = true;
+                saveData();
             }
         });
 
         add = new JButton("Добавить");
-        add.setBounds(10, 335, 100, 25);
+        add.setBounds(380, 180, 150, 25);
         add.setFont(Parameters.BUTTONS_FONT);
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(isFieldsValid()) {
                     entriesTable.add(new DirectoryEntry(
-                            fullNameTextField.getText(),
+                            firstNameTextField.getText(),
+                            lastNameTextField.getText(),
+                            patronymicTextField.getText(),
                             addressTextField.getText(),
                             phoneNumberTextField.getText() + "\n"));
                     resetStrings();
-                    isDataChanges = true;
+                    saveData();
                 }
             }
         });
@@ -169,32 +179,34 @@ public class EditEntryForm extends JFrame {
             public void actionPerformed(ActionEvent arg0) {
                 index = entries.getSelectedRow();
                 String[] args = entriesTable.getRow(index);
-                setStrings(args[0], args[1], args[2]);
+                setStrings(args);
                 ok.setVisible(true);
             }
         });
 
         ok = new JButton("Готово");
         ok.setVisible(false);
-        ok.setBounds(125, 440, 75, 25);
+        ok.setBounds(620, 180, 150, 25);
         ok.setFont(Parameters.BUTTONS_FONT);
         ok.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                isDataChanges = true;
                 DirectoryEntry entry = new DirectoryEntry(
-                        fullNameTextField.getText(),
+                        firstNameTextField.getText(),
+                        lastNameTextField.getText(),
+                        patronymicTextField.getText(),
                         addressTextField.getText(),
                         phoneNumberTextField.getText() + "\n");
                 entriesTable.update(entry, index);
                 resetStrings();
+                saveData();
                 ok.setVisible(false);
             }
         });
 
 
         JButton exit = new JButton("Выход");
-        exit.setBounds(320, 445, 75, 25);
+        exit.setBounds(650, 335, 150, 25);
         exit.setFont(Parameters.BUTTONS_FONT);
         exit.addActionListener(new ActionListener() {
             @Override
@@ -241,8 +253,12 @@ public class EditEntryForm extends JFrame {
         panel.add(comboBox);
         panel.add(phoneNumber);
         panel.add(phoneNumberTextField);
-        panel.add(fullName);
-        panel.add(fullNameTextField);
+        panel.add(firstName);
+        panel.add(lastName);
+        panel.add(patronymic);
+        panel.add(firstNameTextField);
+        panel.add(lastNameTextField);
+        panel.add(patronymicTextField);
         panel.add(address);
         panel.add(addressTextField);
         panel.add(add);
@@ -266,36 +282,38 @@ public class EditEntryForm extends JFrame {
     }
 
     private void resetStrings() {
-        fullNameTextField.setText("");
+        firstNameTextField.setText("");
+        lastNameTextField.setText("");
+        patronymicTextField.setText("");
         addressTextField.setText("");
         phoneNumberTextField.setText("");
     }
 
-    private void setStrings(String name, String addr, String phone) {
-        fullNameTextField.setText(name);
-        addressTextField.setText(addr);
-        phoneNumberTextField.setText(phone);
+    private void setStrings(String[] args) {
+        firstNameTextField.setText(args[0]);
+        lastNameTextField.setText(args[1]);
+        patronymicTextField.setText(args[2]);
+        addressTextField.setText(args[3]);
+        phoneNumberTextField.setText(args[4]);
     }
 
     private void saveData() {
-        if(isDataChanges) {
-            String filename;
-            switch (comboBox.getSelectedIndex()) {
-                case 0:
-                    filename = "dir_vit";
-                    break;
-                case 1:
-                    filename = "dir_minsk";
-                    break;
-                default:
-                    filename = "new";
-            }
-            FileProcessing.write(filename, entriesTable.getData());
+        String filename;
+        switch (comboBox.getSelectedIndex()) {
+            case 0:
+                filename = "dir_vit";
+                break;
+            case 1:
+                filename = "dir_minsk";
+                break;
+            default:
+                filename = "dir_new";
         }
+        FileProcessing.write(filename, entriesTable.getData());
     }
 
     private boolean isFieldsValid() {
-        return !fullNameTextField.getText().equals("") &&
+        return !firstNameTextField.getText().equals("") &&
                 !addressTextField.getText().equals("") &&
                 !phoneNumberTextField.getText().equals("");
     }

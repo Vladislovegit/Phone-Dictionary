@@ -1,18 +1,22 @@
 package models;
 
 public class DirectoryEntry {
-    private String fullName;
+    private String firstName;
+    private String lastName;
+    private String patronymic;
     private String address;
     private String phoneNumber;
 
-    public DirectoryEntry(String full_name, String address, String phone_number) {
-        this.fullName = full_name;
+    public DirectoryEntry(String firstName, String lastName, String patronymic, String address, String phone_number) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.patronymic = patronymic;
         this.address = address;
         this.phoneNumber = phone_number;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFirstName() {
+        return firstName;
     }
 
     public String getAddress() {
@@ -23,8 +27,16 @@ public class DirectoryEntry {
         return phoneNumber;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPatronymic() {
+        return patronymic;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public void setAddress(String address) {
@@ -33,5 +45,13 @@ public class DirectoryEntry {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setPatronymic(String patronymic) {
+        this.patronymic = patronymic;
     }
 }

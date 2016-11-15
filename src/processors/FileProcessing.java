@@ -39,7 +39,7 @@ public class FileProcessing {
             try {
                 String string;
                 for (String[] args : strings) {
-                    string = args[0] + ";" + args[1] + ";" + args[2];
+                    string = args[0] + " " + args[1] + " " + args[2] + ";" + args[3] + ";" + args[4];
                     out.print(string);
                 }
             }

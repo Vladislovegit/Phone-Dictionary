@@ -1,6 +1,7 @@
 package models;
 
 import processors.FileProcessing;
+import processors.StringParser;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -8,13 +9,20 @@ import java.util.ArrayList;
 public class EntriesTableModel extends AbstractTableModel {
     private final static int COLUMN_COUNT = 3;
 
+    private ArrayList<String[]> tableDataArrayList;
     private ArrayList<String[]> dataArrayList;
 
+
     public EntriesTableModel() {
-        dataArrayList = new ArrayList<String[]>();
-        for (int i = 0; i < dataArrayList.size(); i++) {
-            dataArrayList.add(new String[(getColumnCount())]);
+        tableDataArrayList = new ArrayList<String[]>();
+        for (int i = 0; i < tableDataArrayList.size(); i++) {
+            tableDataArrayList.add(new String[(getColumnCount())]);
         }
+        dataArrayList = new ArrayList<String[]>();
+    }
+
+    public ArrayList<String[]> getTableData() {
+        return tableDataArrayList;
     }
 
     public ArrayList<String[]> getData() {
@@ -22,7 +30,7 @@ public class EntriesTableModel extends AbstractTableModel {
     }
 
     public int getRowCount() {
-        return dataArrayList.size();
+        return tableDataArrayList.size();
     }
 
     public int getColumnCount() {
@@ -30,7 +38,7 @@ public class EntriesTableModel extends AbstractTableModel {
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
-        String[] rows = dataArrayList.get(rowIndex);
+        String[] rows = tableDataArrayList.get(rowIndex);
         return rows[columnIndex];
     }
 
@@ -40,44 +48,65 @@ public class EntriesTableModel extends AbstractTableModel {
     }
 
     public void add(DirectoryEntry entry) {
-        String[] rowTable = getStrings(entry);
-        dataArrayList.add(rowTable);
+        dataArrayList.add(new String[] {
+                entry.getFirstName(),
+                entry.getLastName(),
+                entry.getPatronymic(),
+                entry.getAddress(),
+                entry.getPhoneNumber()
+        });
+        String[] args = getStrings(entry);
+        tableDataArrayList.add(args);
         fireTableDataChanged();
     }
 
-    public void remove(DirectoryEntry entry) {
-        int index = getRowNumber(entry);
-        dataArrayList.remove(index);
-        fireTableRowsDeleted(index, index);
-    }
-
     public void remove(int index) {
+        tableDataArrayList.remove(index);
         dataArrayList.remove(index);
         fireTableRowsDeleted(index, index);
     }
 
     public void update(DirectoryEntry entry, int index) {
         String[] rowSrc = getStrings(entry);
-        dataArrayList.set(index, rowSrc);
+        tableDataArrayList.set(index, rowSrc);
+        dataArrayList.set(index, changeDifferentFields(entry, index));
         fireTableRowsUpdated(index, index);
     }
 
+    private String[] changeDifferentFields(DirectoryEntry entry, int index) {
+        String[] strings = dataArrayList.get(index);
+        if(!strings[0].equals(entry.getFirstName()))
+            strings[0] = entry.getFirstName();
+        if(!strings[1].equals(entry.getLastName()))
+            strings[1] = entry.getLastName();
+        if(!strings[2].equals(entry.getPatronymic()))
+            strings[2] = entry.getPatronymic();
+        if(!strings[3].equals(entry.getAddress()))
+            strings[3] = entry.getAddress();
+        if(!strings[4].equals(entry.getPhoneNumber()))
+            strings[4] = entry.getPhoneNumber();
+        return strings;
+    }
+
     public void removeAll() {
-        int size = dataArrayList.size();
-        if (dataArrayList.size() > 0)
+        int size = tableDataArrayList.size();
+        if (tableDataArrayList.size() > 0)
             for (int i = size - 1; i >= 0; i--) {
-                dataArrayList.remove(i);
+                tableDataArrayList.remove(i);
             }
         else return;
     }
 
     public void showData(String filename) {
         ArrayList<DirectoryEntry> result = new ArrayList<DirectoryEntry>();
+        dataArrayList.clear();
         String[] strings = FileProcessing.readAll(filename);
         String[] args;
-        for (int i = 0; i < strings.length; i++) {
-            args = strings[i].split(";");
-            result.add(new DirectoryEntry(args[0], args[1], args[2]));
+        String[] fullName;
+        for (String string : strings) {
+            args = StringParser.rowParser(string);
+            fullName = StringParser.nameParser(args[0]);
+            result.add(new DirectoryEntry(fullName[0], fullName[1], fullName[2], args[1], args[2]));
         }
         removeAll();
         for (DirectoryEntry aResult : result) add(aResult);
@@ -88,8 +117,8 @@ public class EntriesTableModel extends AbstractTableModel {
         String[] rowDest;
         String[] rowSrc = getStrings(entry);
         int index = 0;
-        for (int i = 0; i < dataArrayList.size(); i++) {
-            rowDest = dataArrayList.get(i);
+        for (int i = 0; i < tableDataArrayList.size(); i++) {
+            rowDest = tableDataArrayList.get(i);
             if (rowDest[0].compareTo(rowSrc[0]) == 0 &&
                     rowDest[1].compareTo(rowSrc[1]) == 0 &&
                     rowDest[2].compareTo(rowSrc[2]) == 0) {
@@ -102,7 +131,7 @@ public class EntriesTableModel extends AbstractTableModel {
 
     private String[] getStrings(DirectoryEntry entry) {
         String[] rowSrc = new String[getColumnCount()];
-        rowSrc[0] = entry.getFullName();
+        rowSrc[0] = (entry.getLastName() + " " + entry.getFirstName().charAt(0) + ". " + entry.getPatronymic().charAt(0) + ".").toUpperCase();
         rowSrc[1] = entry.getAddress();
         rowSrc[2] = entry.getPhoneNumber();
         return rowSrc;
