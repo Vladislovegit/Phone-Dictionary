@@ -69,12 +69,12 @@ public class GreetingForm extends JFrame {
         info.setEditable(false);
         info.setLineWrap(true);
         info.setWrapStyleWord(true);
-        info.setBounds(0, 0, Parameters.WIDTH - 100, Parameters.HEIGHT - 150);
+        info.setPreferredSize(new Dimension(Parameters.WIDTH, Parameters.HEIGHT - 250));
         info.setFont(Parameters.LABELS_FONT);
         info.setOpaque(false);
 
-        label.add(info);
-        label.add(enter);
-        label.add(exit);
+        add(info);
+        add(enter, BOTTOM_ALIGNMENT);
+        add(exit, BOTTOM_ALIGNMENT);
     }
 }

@@ -61,7 +61,7 @@ public class HelpForm extends JDialog {
                         JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
                     dispose();
                     MainForm form = MainForm.getInstance();
-                    if (!form.isEnabled()) {
+                    if (!form.isEnabled() && form.isVisible()) {
                         form.setEnabled(true);
                     }
                     else {
