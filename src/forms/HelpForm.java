@@ -1,19 +1,26 @@
 package forms;
 
-import models.Parameters;
+import forms.util.Parameters;
 import processors.FileProcessing;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class HelpForm extends JFrame {
 
+    private static final HelpForm instance = new HelpForm();
     private JTextArea info;
 
-    public HelpForm() {
+    public static HelpForm getInstance() {
+        return instance;
+    }
+
+    private HelpForm() {
         setTitle("Справка");
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setSize(Parameters.WIDTH, Parameters.HEIGHT - 150);
         setResizable(false);
         setLocationRelativeTo(null);
@@ -26,12 +33,43 @@ public class HelpForm extends JFrame {
         info.setEditable(false);
         info.setLineWrap(true);
         info.setWrapStyleWord(true);
-        info.setBounds(10, 10, Parameters.WIDTH, Parameters.HEIGHT);
+        info.setBounds(220, 10, Parameters.WIDTH - 170, Parameters.HEIGHT);
         info.setFont(Parameters.LABELS_FONT);
         fillTextAreaWithTextFromFile("help");
 
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File("resources/img/help.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ImageIcon icon = new ImageIcon(img);
+        JLabel label = new JLabel(icon);
+        label.setBounds(0, 0, 200, 200);
+
+        panel.add(label);
         panel.add(info);
         add(panel);
+
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if (JOptionPane.showConfirmDialog(panel,
+                        "Are you sure to close this window?", "Really Closing?",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+                    dispose();
+                    MainForm form = MainForm.getInstance();
+                    if (!form.isEnabled()) {
+                        form.setEnabled(true);
+                    }
+                    else {
+                        EditEntryForm editEntryForm = EditEntryForm.getInstance();
+                        editEntryForm.setEnabled(true);
+                    }
+                }
+            }
+        });
     }
 
     private void fillTextAreaWithTextFromFile(String filename) {

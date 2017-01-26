@@ -1,23 +1,29 @@
 package forms;
 
-import models.EntriesTableModel;
-import models.Parameters;
+import forms.util.EntriesTableModel;
+import forms.util.Parameters;
 
 import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class MainForm extends JFrame {
+
+    private static MainForm instance = new MainForm();
 
     private static EntriesTableModel entriesTable;
     private JTable entries;
     private JComboBox comboBox;
 
-    public MainForm() {
+    private MainForm() {
         buildGUI();
         showData();
+    }
+
+    public static MainForm getInstance() {
+        return instance;
     }
 
     private void buildGUI() {
@@ -34,59 +40,92 @@ public class MainForm extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         JMenu main = new JMenu("Главная");
         JMenu edit = new JMenu("Редактирование");
-        edit.addMenuListener(new MenuListener() {
+        edit.addMouseListener(new MouseListener() {
             @Override
-            public void menuSelected(MenuEvent e) {
-                EditEntryForm form = new EditEntryForm();
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                EditEntryForm form = EditEntryForm.getInstance();
                 form.setVisible(true);
                 dispose();
-            }
-
-            @Override
-            public void menuDeselected(MenuEvent e) {
 
             }
 
             @Override
-            public void menuCanceled(MenuEvent e) {
+            public void mouseReleased(MouseEvent e) {
 
             }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+
         });
         JMenu author = new JMenu("Об авторе");
-        author.addMenuListener(new MenuListener() {
+        author.addMouseListener(new MouseListener() {
             @Override
-            public void menuSelected(MenuEvent e) {
-                AboutAuthorForm form = new AboutAuthorForm();
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                AboutAuthorForm form = AboutAuthorForm.getInstance();
                 form.setVisible(true);
+                setEnabled(false);
             }
 
             @Override
-            public void menuDeselected(MenuEvent e) {
+            public void mouseReleased(MouseEvent e) {
 
             }
 
             @Override
-            public void menuCanceled(MenuEvent e) {
+            public void mouseEntered(MouseEvent e) {
 
             }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+
         });
         JMenu help = new JMenu("Справка");
-        help.addMenuListener(new MenuListener() {
+        help.addMouseListener(new MouseListener() {
             @Override
-            public void menuSelected(MenuEvent e) {
-                HelpForm form = new HelpForm();
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                HelpForm form = HelpForm.getInstance();
                 form.setVisible(true);
+                setEnabled(false);
             }
 
             @Override
-            public void menuDeselected(MenuEvent e) {
+            public void mouseReleased(MouseEvent e) {
 
             }
 
             @Override
-            public void menuCanceled(MenuEvent e) {
+            public void mouseEntered(MouseEvent e) {
 
             }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+
         });
 
         menuBar.add(main);

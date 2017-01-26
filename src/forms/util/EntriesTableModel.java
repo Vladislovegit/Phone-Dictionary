@@ -1,5 +1,6 @@
-package models;
+package forms.util;
 
+import models.DirectoryEntry;
 import processors.FileProcessing;
 import processors.StringParser;
 

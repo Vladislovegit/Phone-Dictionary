@@ -1,8 +1,8 @@
-import forms.MainForm;
+import forms.GreetingForm;
 
 public class Main {
     public static void main(String[] args){
-        MainForm ui = new MainForm();
+        GreetingForm ui = GreetingForm.getInstance();
         ui.setVisible(true);
     }
 }

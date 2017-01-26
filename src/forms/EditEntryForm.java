@@ -1,8 +1,8 @@
 package forms;
 
 import models.DirectoryEntry;
-import models.EntriesTableModel;
-import models.Parameters;
+import forms.util.EntriesTableModel;
+import forms.util.Parameters;
 import processors.FileProcessing;
 
 import javax.swing.*;
@@ -15,6 +15,8 @@ import java.awt.event.MouseEvent;
 
 public class EditEntryForm extends JFrame {
 
+    private static final EditEntryForm instance = new EditEntryForm();
+
     private JButton add, delete, editBtn, ok;
 
     private static EntriesTableModel entriesTable;
@@ -23,7 +25,11 @@ public class EditEntryForm extends JFrame {
     private JTextField firstNameTextField, lastNameTextField, patronymicTextField, addressTextField, phoneNumberTextField;
     private int index;
 
-    public EditEntryForm() {
+    public static EditEntryForm getInstance() {
+        return instance;
+    }
+
+    private EditEntryForm() {
         buildGUI();
 
         delete.setEnabled(false);
@@ -47,7 +53,7 @@ public class EditEntryForm extends JFrame {
         main.addMenuListener(new MenuListener() {
             @Override
             public void menuSelected(MenuEvent e) {
-                MainForm form = new MainForm();
+                MainForm form = MainForm.getInstance();
                 form.setVisible(true);
                 saveData();
                 dispose();
@@ -68,8 +74,9 @@ public class EditEntryForm extends JFrame {
         author.addMenuListener(new MenuListener() {
             @Override
             public void menuSelected(MenuEvent e) {
-                AboutAuthorForm form = new AboutAuthorForm();
+                AboutAuthorForm form = AboutAuthorForm.getInstance();
                 form.setVisible(true);
+                setEnabled(false);
             }
 
             @Override
@@ -86,8 +93,9 @@ public class EditEntryForm extends JFrame {
         help.addMenuListener(new MenuListener() {
             @Override
             public void menuSelected(MenuEvent e) {
-                HelpForm form = new HelpForm();
+                HelpForm form = HelpForm.getInstance();
                 form.setVisible(true);
+                setEnabled(false);
             }
 
             @Override
@@ -147,8 +155,13 @@ public class EditEntryForm extends JFrame {
         delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                entriesTable.remove(entries.getSelectedRow());
-                saveData();
+                if (JOptionPane.showConfirmDialog(panel,
+                        "Are you sure to delete this item?", "Delete item",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                    entriesTable.remove(entries.getSelectedRow());
+                    saveData();
+                }
             }
         });
 
@@ -158,16 +171,22 @@ public class EditEntryForm extends JFrame {
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(isFieldsValid()) {
-                    entriesTable.add(new DirectoryEntry(
-                            firstNameTextField.getText(),
-                            lastNameTextField.getText(),
-                            patronymicTextField.getText(),
-                            addressTextField.getText(),
-                            phoneNumberTextField.getText() + "\n"));
-                    resetStrings();
-                    saveData();
+                if (JOptionPane.showConfirmDialog(panel,
+                        "Are you sure to add this item?", "Add item",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                    if(isFieldsValid()) {
+                        entriesTable.add(new DirectoryEntry(
+                                firstNameTextField.getText(),
+                                lastNameTextField.getText(),
+                                patronymicTextField.getText(),
+                                addressTextField.getText(),
+                                phoneNumberTextField.getText() + "\n"));
+                        resetStrings();
+                        saveData();
+                    }
                 }
+
             }
         });
 
@@ -191,16 +210,21 @@ public class EditEntryForm extends JFrame {
         ok.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DirectoryEntry entry = new DirectoryEntry(
-                        firstNameTextField.getText(),
-                        lastNameTextField.getText(),
-                        patronymicTextField.getText(),
-                        addressTextField.getText(),
-                        phoneNumberTextField.getText() + "\n");
-                entriesTable.update(entry, index);
-                resetStrings();
-                saveData();
-                ok.setVisible(false);
+                if (JOptionPane.showConfirmDialog(panel,
+                        "Are you sure to edit this item?", "Edit item?",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                    DirectoryEntry entry = new DirectoryEntry(
+                            firstNameTextField.getText(),
+                            lastNameTextField.getText(),
+                            patronymicTextField.getText(),
+                            addressTextField.getText(),
+                            phoneNumberTextField.getText() + "\n");
+                    entriesTable.update(entry, index);
+                    resetStrings();
+                    saveData();
+                    ok.setVisible(false);
+                }
             }
         });
 
