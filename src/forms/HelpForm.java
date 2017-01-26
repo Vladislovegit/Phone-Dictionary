@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class HelpForm extends JFrame {
+public class HelpForm extends JDialog {
 
     private static final HelpForm instance = new HelpForm();
     private JTextArea info;
@@ -24,6 +24,7 @@ public class HelpForm extends JFrame {
         setSize(Parameters.WIDTH, Parameters.HEIGHT - 150);
         setResizable(false);
         setLocationRelativeTo(null);
+        setAlwaysOnTop(true);
 
         JPanel panel = new JPanel();
         panel.setBackground(Parameters.BACKGROUND_COLOR);

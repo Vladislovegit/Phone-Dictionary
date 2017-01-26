@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class AboutAuthorForm extends JFrame {
+public class AboutAuthorForm extends JDialog {
 
     private static final AboutAuthorForm instance = new AboutAuthorForm();
 
@@ -25,6 +25,7 @@ public class AboutAuthorForm extends JFrame {
         setSize(Parameters.WIDTH, Parameters.HEIGHT - 200);
         setResizable(false);
         setLocationRelativeTo(null);
+        setAlwaysOnTop(true);
 
         JPanel panel = new JPanel();
         panel.setBackground(Parameters.BACKGROUND_COLOR);
@@ -61,7 +62,7 @@ public class AboutAuthorForm extends JFrame {
                         JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                     dispose();
                     MainForm form = MainForm.getInstance();
-                    if (!form.isEnabled()) {
+                    if (!form.isEnabled() && form.isVisible()) {
                         form.setEnabled(true);
                     } else {
                         EditEntryForm editEntryForm = EditEntryForm.getInstance();

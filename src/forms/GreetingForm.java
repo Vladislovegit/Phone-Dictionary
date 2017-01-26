@@ -4,6 +4,7 @@ import forms.util.Parameters;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -13,8 +14,6 @@ import java.io.IOException;
 public class GreetingForm extends JFrame {
 
     private static final GreetingForm instance = new GreetingForm();
-
-    private JTextArea info;
 
     public static GreetingForm getInstance() {
         return instance;
@@ -27,12 +26,24 @@ public class GreetingForm extends JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setBackground(Parameters.BACKGROUND_COLOR);
-        panel.setLayout(null);
+        setLayout(new BorderLayout());
+
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File("resources/img/greeting.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ImageIcon icon = new ImageIcon(img);
+        JLabel label = new JLabel(icon);
+        label.setBounds(0, 0, Parameters.WIDTH - 100, Parameters.HEIGHT - 150);
+
+        setContentPane(label);
+
+        setLayout(new FlowLayout());
 
         JButton enter = new JButton("Войти");
-        enter.setBounds(87, 150, 125, 45);
+        enter.setPreferredSize(new Dimension(125, 45));
         enter.setFont(Parameters.BUTTONS_FONT);
         enter.addActionListener(new ActionListener() {
             @Override
@@ -44,7 +55,7 @@ public class GreetingForm extends JFrame {
         });
 
         JButton exit = new JButton("Выйти");
-        exit.setBounds(100, 200, 100, 25);
+        exit.setPreferredSize(new Dimension(125, 45));
         exit.setFont(Parameters.BUTTONS_FONT);
         exit.addActionListener(new ActionListener() {
             @Override
@@ -54,28 +65,16 @@ public class GreetingForm extends JFrame {
             }
         });
 
-        info = new JTextArea(" Добро пожаловать в самый лучший в мире телефонный справочник (нет).\n\n");
+        JTextArea info = new JTextArea("\tДобро пожаловать.\n\n");
         info.setEditable(false);
         info.setLineWrap(true);
         info.setWrapStyleWord(true);
-        info.setBounds(110, 0, Parameters.WIDTH - 200, Parameters.HEIGHT - 300);
+        info.setBounds(0, 0, Parameters.WIDTH - 100, Parameters.HEIGHT - 150);
         info.setFont(Parameters.LABELS_FONT);
+        info.setOpaque(false);
 
-
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("resources/img/greeting.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ImageIcon icon = new ImageIcon(img);
-        JLabel label = new JLabel(icon);
-        label.setBounds(0, 0, 100, 100);
-
-        panel.add(label);
-        panel.add(info);
-        panel.add(enter);
-        panel.add(exit);
-        add(panel);
+        label.add(info);
+        label.add(enter);
+        label.add(exit);
     }
 }
