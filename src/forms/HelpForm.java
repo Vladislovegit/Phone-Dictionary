@@ -36,7 +36,7 @@ public class HelpForm extends JDialog {
         info.setWrapStyleWord(true);
         info.setBounds(220, 10, Parameters.WIDTH - 170, Parameters.HEIGHT);
         info.setFont(Parameters.LABELS_FONT);
-        fillTextAreaWithTextFromFile("help");
+        fillTextAreaWithTextFromFile();
 
         BufferedImage img = null;
         try {
@@ -73,8 +73,8 @@ public class HelpForm extends JDialog {
         });
     }
 
-    private void fillTextAreaWithTextFromFile(String filename) {
-        String[] strings = FileProcessing.readAll(filename);
+    private void fillTextAreaWithTextFromFile() {
+        String[] strings = FileProcessing.readAll("help");
         for (String s : strings) {
             info.append(s);
         }

@@ -1,5 +1,8 @@
 package models;
 
+/**
+ * Сущность одной записи в справочнике
+ */
 public class DirectoryEntry {
     private String firstName;
     private String lastName;

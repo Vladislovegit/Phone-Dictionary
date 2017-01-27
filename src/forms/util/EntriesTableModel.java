@@ -7,12 +7,14 @@ import processors.StringParser;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
+/**
+ * Класс, описывающий модель поведения таблицы
+ */
 public class EntriesTableModel extends AbstractTableModel {
     private final static int COLUMN_COUNT = 3;
 
     private ArrayList<String[]> tableDataArrayList;
     private ArrayList<String[]> dataArrayList;
-
 
     public EntriesTableModel() {
         tableDataArrayList = new ArrayList<String[]>();
@@ -22,32 +24,50 @@ public class EntriesTableModel extends AbstractTableModel {
         dataArrayList = new ArrayList<String[]>();
     }
 
-    public ArrayList<String[]> getTableData() {
-        return tableDataArrayList;
-    }
-
     public ArrayList<String[]> getData() {
         return dataArrayList;
     }
 
+    /**
+     * Метод, возвращающий количество строк в таблице
+     * @return количество строк в таблице
+     */
     public int getRowCount() {
         return tableDataArrayList.size();
     }
 
+    /**
+     * Метод, возвращающий количество столбцов в таблице
+     * @return количество столбцов в таблице
+     */
     public int getColumnCount() {
         return COLUMN_COUNT;
     }
 
-    public Object getValueAt(int rowIndex, int columnIndex) {
+    /**
+     * Метод, для получение данных из определенной позиции таблицы
+     * @param rowIndex номер строки таблицы
+     * @param columnIndex номер столбца таблицы
+     * @return искомые данные
+     */
+    public String getValueAt(int rowIndex, int columnIndex) {
         String[] rows = tableDataArrayList.get(rowIndex);
         return rows[columnIndex];
     }
 
+    /**
+     * Метод для получения всех данных определенной строки
+     * @param rowIndex номер строки
+     * @return массив строк, содержащий искомые данные
+     */
     public String[] getRow(int rowIndex) {
-        String[] row = dataArrayList.get(rowIndex);
-        return row;
+        return dataArrayList.get(rowIndex);
     }
 
+    /**
+     * Метод для добавления в таблице новой записи
+     * @param entry искомая запись
+     */
     public void add(DirectoryEntry entry) {
         dataArrayList.add(new String[] {
                 entry.getFirstName(),
@@ -61,12 +81,21 @@ public class EntriesTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
+    /**
+     * Метод для удаление записи из таблицы
+     * @param index номер запии
+     */
     public void remove(int index) {
         tableDataArrayList.remove(index);
         dataArrayList.remove(index);
         fireTableRowsDeleted(index, index);
     }
 
+    /**
+     * Метод для обновления определенной записи в таблице
+     * @param entry запись с обновленными данными
+     * @param index позиция записи в таблице
+     */
     public void update(DirectoryEntry entry, int index) {
         String[] rowSrc = getStrings(entry);
         tableDataArrayList.set(index, rowSrc);
@@ -74,6 +103,12 @@ public class EntriesTableModel extends AbstractTableModel {
         fireTableRowsUpdated(index, index);
     }
 
+    /**
+     * Метод, который проверяет даныые на идентичность, в отличном случае заменяет
+     * @param entry данные, которые будут сравниваться
+     * @param index позиция в таблице данных, с которыми будет происходить сравнение
+     * @return результат сравнения
+     */
     private String[] changeDifferentFields(DirectoryEntry entry, int index) {
         String[] strings = dataArrayList.get(index);
         if(!strings[0].equals(entry.getFirstName()))
@@ -89,6 +124,9 @@ public class EntriesTableModel extends AbstractTableModel {
         return strings;
     }
 
+    /**
+     * Метод для удаления всех записей из таблицы
+     */
     public void removeAll() {
         int size = tableDataArrayList.size();
         if (tableDataArrayList.size() > 0)
@@ -98,6 +136,10 @@ public class EntriesTableModel extends AbstractTableModel {
         else return;
     }
 
+    /**
+     * Метод для приведения данных в подобающий для отображения вид
+     * @param filename имя файла, из которого беруться данные
+     */
     public void showData(String filename) {
         ArrayList<DirectoryEntry> result = new ArrayList<DirectoryEntry>();
         dataArrayList.clear();
@@ -114,22 +156,11 @@ public class EntriesTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
-    public int getRowNumber(DirectoryEntry entry) {
-        String[] rowDest;
-        String[] rowSrc = getStrings(entry);
-        int index = 0;
-        for (int i = 0; i < tableDataArrayList.size(); i++) {
-            rowDest = tableDataArrayList.get(i);
-            if (rowDest[0].compareTo(rowSrc[0]) == 0 &&
-                    rowDest[1].compareTo(rowSrc[1]) == 0 &&
-                    rowDest[2].compareTo(rowSrc[2]) == 0) {
-                index = i;
-                break;
-            }
-        }
-        return index;
-    }
-
+    /**
+     * Метод для преобазования записи DirectoryEntry в массив строк
+     * @param entry запись для преобразования
+     * @return полученный массив строк
+     */
     private String[] getStrings(DirectoryEntry entry) {
         String[] rowSrc = new String[getColumnCount()];
         rowSrc[0] = (entry.getLastName() + " " + entry.getFirstName().charAt(0) + ". " + entry.getPatronymic().charAt(0) + ".").toUpperCase();

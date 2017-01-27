@@ -9,6 +9,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+/**
+ * Главная форма приложения
+ */
 public class MainForm extends JFrame {
 
     private static MainForm instance = new MainForm();
@@ -17,15 +20,25 @@ public class MainForm extends JFrame {
     private JTable entries;
     private JComboBox comboBox;
 
+    /**
+     * Коструктор главной формы
+     */
     private MainForm() {
         buildGUI();
         showData();
     }
 
+    /**
+     * Метод для получени экземпляра класса
+     * @return экземпляр класса
+     */
     public static MainForm getInstance() {
         return instance;
     }
 
+    /**
+     * Метод, в котором строится графический интерфейс формы
+     */
     private void buildGUI() {
         setTitle("Телефонный справочник");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -167,6 +180,9 @@ public class MainForm extends JFrame {
         add(panel);
     }
 
+    /**
+     * Метод для отображения содержимого таблицы, в зависимости от выбранного справочника
+     */
     private void showData() {
         switch (comboBox.getSelectedIndex()) {
             case 0:

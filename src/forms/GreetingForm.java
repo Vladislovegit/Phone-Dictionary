@@ -11,14 +11,25 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+
+/**
+ * Начальная форма, форма приветсвия
+ */
 public class GreetingForm extends JFrame {
 
     private static final GreetingForm instance = new GreetingForm();
 
+    /**
+     * Метод для реализации петтерна Singleton
+     * @return экземпляр класса
+     */
     public static GreetingForm getInstance() {
         return instance;
     }
 
+    /**
+     * Конструктор класса, в нем реализуется заполнение формы
+     */
     private GreetingForm() {
         setTitle("Приветствие");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
